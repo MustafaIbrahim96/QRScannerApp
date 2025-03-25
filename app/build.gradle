@@ -1,0 +1,70 @@
+plugins {
+    alias(libs.plugins.android.application)
+    id 'org.jetbrains.kotlin.android' version '2.1.0'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    namespace 'com.mustafa.qrscannerapp'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.mustafa.qrscannerapp"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    //HILT
+    implementation "com.google.dagger:hilt-android:2.50"
+    annotationProcessor "com.google.dagger:hilt-compiler:2.50"
+    kapt "com.google.dagger:hilt-compiler:2.50"
+
+    // ZXing for QR code scanning
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
+    // Room Database
+    implementation "androidx.room:room-runtime:2.6.1"
+    annotationProcessor "androidx.room:room-compiler:2.6.1"
+    kapt "androidx.room:room-compiler:2.6.1"
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1"
+    implementation "androidx.lifecycle:lifecycle-livedata:2.5.1"
+
+    // RecyclerView
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+
+}
+
+kapt {
+    correctErrorTypes true
+}
