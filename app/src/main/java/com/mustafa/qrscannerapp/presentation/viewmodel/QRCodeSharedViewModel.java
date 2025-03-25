@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
-public class QRCodeViewModel extends ViewModel {
+public class QRCodeSharedViewModel extends ViewModel {
 
     private final GetQRCodesUseCase getQRCodesUseCase;
     private final InsertQRCodeUseCase insertQRCodeUseCase;
@@ -26,10 +26,10 @@ public class QRCodeViewModel extends ViewModel {
 
 
     @Inject
-    public QRCodeViewModel(GetQRCodesUseCase getQRCodesUseCase,
-                           InsertQRCodeUseCase insertQRCodeUseCase,
-                           ToggleFavoriteUseCase toggleFavoriteUseCase,
-                           GetFavoriteQRCodesUseCase getFavoriteQRCodesUseCase) {
+    public QRCodeSharedViewModel(GetQRCodesUseCase getQRCodesUseCase,
+                                 InsertQRCodeUseCase insertQRCodeUseCase,
+                                 ToggleFavoriteUseCase toggleFavoriteUseCase,
+                                 GetFavoriteQRCodesUseCase getFavoriteQRCodesUseCase) {
         this.getQRCodesUseCase = getQRCodesUseCase;
         this.insertQRCodeUseCase = insertQRCodeUseCase;
         this.toggleFavoriteUseCase = toggleFavoriteUseCase;
@@ -43,7 +43,6 @@ public class QRCodeViewModel extends ViewModel {
     public LiveData<List<QRCode>> getFavoriteQRCodes() {
         return getFavoriteQRCodesUseCase.execute();
     }
-
 
     public void insertQRCode(String content) {
         insertQRCodeUseCase.execute(content);

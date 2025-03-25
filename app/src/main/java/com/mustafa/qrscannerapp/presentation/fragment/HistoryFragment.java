@@ -15,32 +15,39 @@ import android.view.ViewGroup;
 
 import com.mustafa.qrscannerapp.R;
 import com.mustafa.qrscannerapp.data.local.entity.QRCode;
+import com.mustafa.qrscannerapp.databinding.FragmentHistoryBinding;
 import com.mustafa.qrscannerapp.presentation.adapters.QRCodeAdapter;
-import com.mustafa.qrscannerapp.presentation.viewmodel.QRCodeViewModel;
+import com.mustafa.qrscannerapp.presentation.viewmodel.QRCodeSharedViewModel;
 
 
 public class HistoryFragment extends Fragment {
-    private QRCodeViewModel viewModel;
+
+    private FragmentHistoryBinding binding;
+    private QRCodeSharedViewModel viewModel;
     private QRCodeAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(QRCodeViewModel.class);
+        initViewModel();
+    }
+
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(requireActivity()).get(QRCodeSharedViewModel.class);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        binding = FragmentHistoryBinding.inflate(inflater,container,false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new QRCodeAdapter(new QRCodeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(QRCode qrCode) {
@@ -52,7 +59,7 @@ public class HistoryFragment extends Fragment {
                 viewModel.toggleFavorite(qrCode);
             }
         });
-        recyclerView.setAdapter(adapter);
+        binding.recyclerView.setAdapter(adapter);
 
         viewModel.getAllQRCodes().observe(getViewLifecycleOwner(), qrCodes -> {
             adapter.setQRCodes(qrCodes);

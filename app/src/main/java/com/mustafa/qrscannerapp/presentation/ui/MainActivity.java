@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -23,44 +20,48 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.mustafa.qrscannerapp.R;
+import com.mustafa.qrscannerapp.databinding.ActivityMainBinding;
 import com.mustafa.qrscannerapp.presentation.fragment.FavoritesFragment;
 import com.mustafa.qrscannerapp.presentation.fragment.HistoryFragment;
-import com.mustafa.qrscannerapp.presentation.viewmodel.QRCodeViewModel;
+import com.mustafa.qrscannerapp.presentation.viewmodel.QRCodeSharedViewModel;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
-    private QRCodeViewModel viewModel;
+
+    private ActivityMainBinding binding;
+    private QRCodeSharedViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        viewModel = new ViewModelProvider(this).get(QRCodeViewModel.class);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        initViewModel();
         setupViewPager();
         setupFab();
     }
 
-    private void setupViewPager() {
-        ViewPager2 viewPager = findViewById(R.id.viewPager);
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
+    private void initViewModel() {
+        viewModel = new ViewModelProvider(this).get(QRCodeSharedViewModel.class);
+    }
 
+    private void setupViewPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
         adapter.addFragment(new HistoryFragment(), "History");
         adapter.addFragment(new FavoritesFragment(), "Favorites");
 
-        viewPager.setAdapter(adapter);
-        new TabLayoutMediator(tabLayout, viewPager,
+        binding.viewPager.setAdapter(adapter);
+        new TabLayoutMediator(binding.tabLayout, binding.viewPager,
                 (tab, position) -> tab.setText(adapter.getPageTitle(position))
         ).attach();
     }
 
     private void setupFab() {
-        FloatingActionButton fab = findViewById(R.id.fabScan);
-        fab.setOnClickListener(v -> checkCameraPermissionAndScan());
+        binding.fabScan.setOnClickListener(v -> checkCameraPermissionAndScan());
     }
 
     private void checkCameraPermissionAndScan() {
@@ -91,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
         integrator.setCameraId(0);
         integrator.setBeepEnabled(true);
         integrator.setBarcodeImageEnabled(false);
+
+        integrator.setCaptureActivity(PortraitCaptureActivity.class);
+        integrator.setOrientationLocked(true);
+
         integrator.initiateScan();
     }
 

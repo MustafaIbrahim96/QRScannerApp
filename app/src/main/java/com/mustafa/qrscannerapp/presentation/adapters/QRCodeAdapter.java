@@ -98,7 +98,7 @@ public class QRCodeAdapter extends RecyclerView.Adapter<QRCodeAdapter.QRCodeView
 
         private void updateFavoriteIcon(boolean isFavorite) {
             btnFavorite.setImageResource(isFavorite ?
-                    android.R.drawable.star_big_on : android.R.drawable.star_big_off);
+                    android.R.drawable.star_on : android.R.drawable.star_off);
             btnFavorite.setContentDescription(isFavorite ?
                     "Remove from favorites" : "Add to favorites");
         }
