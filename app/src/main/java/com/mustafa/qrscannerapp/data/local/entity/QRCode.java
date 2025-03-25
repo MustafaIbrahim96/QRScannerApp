@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey;
 public class QRCode {
     @PrimaryKey(autoGenerate = true)
     private int id;
-
     private String content;
     private long timestamp;
     private boolean isFavorite;

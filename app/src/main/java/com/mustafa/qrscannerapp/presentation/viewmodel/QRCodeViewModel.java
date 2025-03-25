@@ -4,40 +4,52 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.mustafa.qrscannerapp.data.local.entity.QRCode;
-import com.mustafa.qrscannerapp.data.repository.QRCodeRepository;
+import com.mustafa.qrscannerapp.domain.usecase.GetFavoriteQRCodesUseCase;
+import com.mustafa.qrscannerapp.domain.usecase.GetQRCodesUseCase;
+import com.mustafa.qrscannerapp.domain.usecase.InsertQRCodeUseCase;
+import com.mustafa.qrscannerapp.domain.usecase.ToggleFavoriteUseCase;
 
 import java.util.List;
+
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class QRCodeViewModel extends ViewModel {
-    private final QRCodeRepository repository;
-    private final LiveData<List<QRCode>> allQRCodes;
-    private final LiveData<List<QRCode>> favoriteQRCodes;
+
+    private final GetQRCodesUseCase getQRCodesUseCase;
+    private final InsertQRCodeUseCase insertQRCodeUseCase;
+    private final ToggleFavoriteUseCase toggleFavoriteUseCase;
+
+    private final GetFavoriteQRCodesUseCase getFavoriteQRCodesUseCase;
+
 
     @Inject
-    public QRCodeViewModel(QRCodeRepository repository) {
-        this.repository = repository;
-        this.allQRCodes = repository.getAllQRCodes();
-        this.favoriteQRCodes = repository.getFavoriteQRCodes();
+    public QRCodeViewModel(GetQRCodesUseCase getQRCodesUseCase,
+                           InsertQRCodeUseCase insertQRCodeUseCase,
+                           ToggleFavoriteUseCase toggleFavoriteUseCase,
+                           GetFavoriteQRCodesUseCase getFavoriteQRCodesUseCase) {
+        this.getQRCodesUseCase = getQRCodesUseCase;
+        this.insertQRCodeUseCase = insertQRCodeUseCase;
+        this.toggleFavoriteUseCase = toggleFavoriteUseCase;
+        this.getFavoriteQRCodesUseCase = getFavoriteQRCodesUseCase;
     }
 
     public LiveData<List<QRCode>> getAllQRCodes() {
-        return allQRCodes;
+        return getQRCodesUseCase.execute();
     }
 
     public LiveData<List<QRCode>> getFavoriteQRCodes() {
-        return favoriteQRCodes;
+        return getFavoriteQRCodesUseCase.execute();
     }
 
 
     public void insertQRCode(String content) {
-        repository.insertQRCode(content);
+        insertQRCodeUseCase.execute(content);
     }
 
     public void toggleFavorite(QRCode qrCode) {
-        repository.toggleFavorite(qrCode);
+        toggleFavoriteUseCase.execute(qrCode);
     }
 }

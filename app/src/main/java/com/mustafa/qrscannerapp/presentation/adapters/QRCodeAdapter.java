@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class QRCodeAdapter extends RecyclerView.Adapter<QRCodeAdapter.QRCodeViewHolder> {
-    private List<QRCode> qrCodes;
+    private List<QRCode> qrCodeEntities;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -32,8 +32,8 @@ public class QRCodeAdapter extends RecyclerView.Adapter<QRCodeAdapter.QRCodeView
         this.listener = listener;
     }
 
-    public void setQRCodes(List<QRCode> qrCodes) {
-        this.qrCodes = qrCodes;
+    public void setQRCodes(List<QRCode> qrCodeEntities) {
+        this.qrCodeEntities = qrCodeEntities;
         notifyDataSetChanged();
     }
 
@@ -47,13 +47,13 @@ public class QRCodeAdapter extends RecyclerView.Adapter<QRCodeAdapter.QRCodeView
 
     @Override
     public void onBindViewHolder(@NonNull QRCodeViewHolder holder, int position) {
-        QRCode qrCode = qrCodes.get(position);
+        QRCode qrCode = qrCodeEntities.get(position);
 
         if (isUrl(qrCode.getContent())) {
             holder.tvContent.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.holo_blue_dark));
             holder.tvContent.setPaintFlags(holder.tvContent.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         } else {
-            holder.tvContent.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.primary_text_dark));
+            holder.tvContent.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.black));
             holder.tvContent.setPaintFlags(holder.tvContent.getPaintFlags() & (~Paint.UNDERLINE_TEXT_FLAG));
         }
 
@@ -62,7 +62,7 @@ public class QRCodeAdapter extends RecyclerView.Adapter<QRCodeAdapter.QRCodeView
 
     @Override
     public int getItemCount() {
-        return qrCodes != null ? qrCodes.size() : 0;
+        return qrCodeEntities != null ? qrCodeEntities.size() : 0;
     }
 
     private boolean isUrl(String content) {
